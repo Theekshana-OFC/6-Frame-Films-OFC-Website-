@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Cards with Animated Background</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background-color: #000;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px);
+      background-size: 40px 40px;
+      animation: moveGrid 10s linear infinite;
+      padding: 20px;
+    }
+
+    @keyframes moveGrid {
+      from { background-position: 0 0; }
+      to { background-position: 200px 0; }
+    }
+
+    h1 {
+      text-align: center;
+      color: red;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px red;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .card {
+      background: linear-gradient(to bottom right, #220000, #400000);
+      border: 2px solid red;
+      border-radius: 20px;
+      padding: 20px;
+      width: 250px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+    }
+
+    .card-img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid red;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .role {
+      color: #ccc;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .contact-btn {
+      display: inline-block;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      color: red;
+      border: 1px solid red;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .contact-btn:hover {
+      background: red;
+      color: black;
+    }
+
+    .back-btn-wrapper {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: red;
+      border: none; /* 🔴 Border removed */
+      border-radius: 25px;
+      background: transparent;
+      text-decoration: none;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background: red;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Team Members</h1>
+
+  <div class="cards-container">
+    <div class="card">
+      <img src="https://via.placeholder.com/100" alt="" class="card-img">
+      <h3>Aken Balasuriya</h3>
+      <p class="role">DIRECTED</p>
+      <a href="https://wa.me/+94741227000" class="contact-btn">Contact Us</a>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/100" alt="" class="card-img">
+      <h3>Methun Sathsara</h3>
+      <p class="role">DOP</p>
+      <a href="https://wa.me/+94703017658" class="contact-btn">Contact Us</a>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/100" alt="" class="card-img">
+      <h3>Theekshana</h3>
+      <p class="role">Digital Media Manager</p>
+      <a href="https://wa.me/+94778080044" class="contact-btn">Contact Us</a>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/100" alt="" class="card-img">
+      <h3>Chamara</h3>
+      <p class="role">Tech</p>
+      <a href="#" class="contact-btn">Contact Us</a>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/100" alt="" class="card-img">
+      <h3>Tharushi</h3>
+      <p class="role">Editor</p>
+      <a href="#" class="contact-btn">Contact Us</a>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/100" alt="" class="card-img">
+      <h3>pp</h3>
+      <p class="role">Developer</p>
+      <a href="#" class="contact-btn">Contact Us</a>
+    </div>
+  </div>
+
+  <div class="back-btn-wrapper">
+    <a href="index.html" class="back-btn">Back</a>
+  </div>
+
+</body>
+</html>

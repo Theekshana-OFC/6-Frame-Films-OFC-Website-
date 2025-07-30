@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coming Soon</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background-color: #000;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px);
+      background-size: 40px 40px;
+      animation: moveGrid 10s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      color: red;
+    }
+
+    @keyframes moveGrid {
+      from { background-position: 0 0; }
+      to { background-position: 200px 0; }
+    }
+
+    .coming-soon {
+      text-align: center;
+      font-size: 1.8rem; /* Smaller font size */
+      text-shadow: 0 0 10px red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="coming-soon">COMING SOON</div>
+
+</body>
+</html>
