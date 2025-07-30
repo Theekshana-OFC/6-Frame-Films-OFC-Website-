@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projects Gallery with Descriptions</title>
+  <title>Projects Gallery with Media</title>
   <style>
     * {
       margin: 0;
@@ -45,9 +45,9 @@
     }
 
     .project-box {
-      width: 300px;
+      width: 320px;
       background: linear-gradient(to bottom right, #220000, #400000);
-      border-radius: 15px;
+      border-radius: 20px;
       box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -60,16 +60,23 @@
       box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
     }
 
-    .project-box img {
+    .project-media {
       width: 100%;
-      height: auto;
+      height: 180px;
+    }
+
+    .project-media img, .project-media iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: none;
       display: block;
     }
 
     .project-box h3 {
       color: red;
       margin: 10px 0 5px;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       text-shadow: 0 0 5px red;
     }
 
@@ -77,7 +84,7 @@
       color: #ddd;
       padding: 0 10px 15px;
       font-size: 0.95rem;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     .back-btn-wrapper {
@@ -91,7 +98,7 @@
       font-size: 1rem;
       color: red;
       background-color: transparent;
-      border: none; /* Removed the red border */
+      border: none;
       border-radius: 30px;
       text-decoration: none;
       transition: all 0.3s ease;
@@ -107,50 +114,46 @@
 </head>
 <body>
 
-  <h1>News</h1>
+  <h1>Our Projects</h1>
 
   <div class="projects-container">
+
+    <!-- Project 1 - YouTube -->
     <div class="project-box">
-      <img src="" alt="">
-      <h3></h3>
-      <p></p>
+      <div class="project-media">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+      </div>
+      <h3>Music Video</h3>
+      <p>Official teaser video for the latest single on our channel.</p>
     </div>
 
+    <!-- Project 2 - YouTube -->
     <div class="project-box">
-      <img src="" alt="">
-      <h3></h3>
-      <p></p>
+      <div class="project-media">
+        <iframe src="https://www.youtube.com/embed/ysz5S6PUM-U" allowfullscreen></iframe>
+      </div>
+      <h3>Short Film</h3>
+      <p>Mini short film released during the new year season.</p>
     </div>
 
+    <!-- Project 3 - Image -->
     <div class="project-box">
-      <img src="" alt="">
-      <h3></h3>
-      <p></p>
+      <div class="project-media">
+        <img src="https://via.placeholder.com/300x180?text=Photo+Project+1" alt="Project Image 1">
+      </div>
+      <h3>Photo Exhibition</h3>
+      <p>Still frame from our urban lifestyle photography collection.</p>
     </div>
 
+    <!-- Project 4 - Image -->
     <div class="project-box">
-      <img src="" alt="">
-      <h3></h3>
-      <p></p>
-    </div>
-  </div>
-
-  <div class="back-btn-wrapper">
-    <a href="index.html" class="back-btn">Back</a>
-  </div>
-
-</body>
-</html>box">
-      <img src="https://via.placeholder.com/300x200" alt="Project 3">
-      <h3>Project 03</h3>
-      <p>Behind the scenes of a commercial production, showcasing our lighting and DOP skills.</p>
+      <div class="project-media">
+        <img src="https://via.placeholder.com/300x180?text=Photo+Project+2" alt="Project Image 2">
+      </div>
+      <h3>Poster Design</h3>
+      <p>Promotional poster designed for a local indie film festival.</p>
     </div>
 
-    <div class="project-box">
-      <img src="https://via.placeholder.com/300x200" alt="Project 4">
-      <h3>Project 04</h3>
-      <p>A social media campaign video created for youth engagement, combining VFX and storytelling.</p>
-    </div>
   </div>
 
   <div class="back-btn-wrapper">
