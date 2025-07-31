@@ -1,107 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Live Comment System</title>
+  <meta charset="UTF-8" />
+  <title>Live Comments</title>
   <style>
     body {
       background-color: #000;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       padding: 20px;
     }
 
     h1 {
-      color: red;
       text-align: center;
+      color: red;
     }
 
-    #comment-form {
-      max-width: 600px;
-      margin: 0 auto 20px auto;
+    form {
       background: #1a0000;
       padding: 20px;
       border: 2px solid red;
-      border-radius: 15px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 0 auto 30px auto;
     }
 
     input, textarea {
       width: 100%;
-      margin: 10px 0;
       padding: 10px;
-      border: 1px solid red;
+      margin-top: 10px;
       background: black;
       color: white;
-      border-radius: 10px;
+      border: 1px solid red;
+      border-radius: 8px;
     }
 
     button {
-      padding: 10px 20px;
       background: red;
       color: white;
-      font-weight: bold;
+      padding: 10px 20px;
+      margin-top: 10px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #ff4d4d;
-    }
-
-    #comment-display {
-      max-width: 600px;
+    #comments {
+      max-width: 500px;
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
     }
 
-    .comment-box {
+    .comment {
       background: #220000;
-      padding: 15px;
       border: 1px solid red;
+      padding: 15px;
       border-radius: 10px;
+      margin-bottom: 10px;
     }
 
-    .comment-box strong {
+    .comment strong {
       color: red;
     }
   </style>
 </head>
 <body>
 
-  <h1>💬 Live Comment Section</h1>
+  <h1>💬 Live Comments</h1>
 
-  <form id="comment-form">
+  <form id="commentForm">
     <input type="text" id="name" placeholder="Your Name" required />
     <textarea id="message" placeholder="Your Comment" required></textarea>
-    <button type="submit">Submit</button>
+    <button type="submit">Submit Comment</button>
   </form>
 
-  <div id="comment-display"></div>
+  <div id="comments"></div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Replace with your actual Firebase config
+    // 🛠 Replace with your own Firebase Config
     var firebaseConfig = {
       apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      databaseURL: "YOUR_DATABASE_URL",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
       projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
       messagingSenderId: "YOUR_SENDER_ID",
       appId: "YOUR_APP_ID"
     };
+
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    var database = firebase.database();
 
-    const form = document.getElementById("comment-form");
-    const display = document.getElementById("comment-display");
+    const form = document.getElementById("commentForm");
+    const commentsDiv = document.getElementById("comments");
 
+    // Submit comment
     form.addEventListener("submit", function(e) {
       e.preventDefault();
       const name = document.getElementById("name").value.trim();
@@ -114,18 +111,18 @@
           timestamp: Date.now()
         };
 
-        db.ref("comments").push(comment);
+        database.ref("comments").push(comment);
         form.reset();
       }
     });
 
-    // Listen for new comments
-    db.ref("comments").on("child_added", function(snapshot) {
+    // Show comments live
+    database.ref("comments").on("child_added", function(snapshot) {
       const data = snapshot.val();
-      const box = document.createElement("div");
-      box.className = "comment-box";
-      box.innerHTML = <strong>${data.name}</strong><p>${data.message}</p>;
-      display.appendChild(box);
+      const commentBox = document.createElement("div");
+      commentBox.className = "comment";
+      commentBox.innerHTML = <strong>${data.name}</strong><p>${data.message}</p>;
+      commentsDiv.appendChild(commentBox);
     });
   </script>
 </body>
