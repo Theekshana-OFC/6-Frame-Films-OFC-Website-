@@ -1,59 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Booked Tickets</title>
+  <title>Booked Ticket Info</title>
   <style>
     body {
       background-color: #000;
       color: white;
       font-family: Arial, sans-serif;
       padding: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
+      animation: moveGrid 12s linear infinite;
     }
 
-    .ticket-box {
+    @keyframes moveGrid {
+      from { background-position: 0 0; }
+      to { background-position: 200px 200px; }
+    }
+
+    .booking-box {
       background-color: #1c1c1c;
       border-left: 5px solid red;
       padding: 15px;
+      margin-bottom: 20px;
       border-radius: 10px;
-      width: 260px;
+      width: 90%;
+      max-width: 400px;
       box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
     }
 
-    h2 {
-      text-align: center;
-      color: red;
-      width: 100%;
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    p {
-      margin: 8px 0;
+    h2 {
+      color: red;
+      text-shadow: 0 0 10px red;
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
-  <h2>All Booked Tickets</h2>
+  <div class="container">
+    <h2>Booked Tickets</h2>
+    <div id="bookingsContainer"></div>
+  </div>
 
   <script>
-    const allData = JSON.parse(localStorage.getItem("allTickets")) || [];
+    const submitted = localStorage.getItem("hasSubmitted");
+    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
 
-    if (allData.length > 0) {
-      allData.forEach(data => {
-        const box = document.createElement("div");
-        box.className = "ticket-box";
-        box.innerHTML = `
-          <p><strong>Name:</strong> ${data.name}</p>
-          <p><strong>WhatsApp:</strong> ${data.whatsapp}</p>
-          <p><strong>Ticket Price:</strong> ${data.price}</p>
-          <p><strong>Ticket Number:</strong> ${data.ticketNumber}</p>
-        `;
-        document.body.appendChild(box);
-      });
+    const container = document.getElementById("bookingsContainer");
+
+    if (submitted !== "true" || bookings.length === 0) {
+      container.innerHTML = "<p style='color:red;'>No bookings found.</p>";
     } else {
-      document.body.innerHTML += "<h3>No Tickets Found</h3>";
+      bookings.forEach((b, index) => {
+        const box = document.createElement("div");
+        box.className = "booking-box";
+        box.innerHTML = `
+          <p><strong>Name:</strong> ${b.name}</p>
+          <p><strong>Phone:</strong> ${b.phone}</p>
+          <p><strong>Gender:</strong> ${b.gender}</p>
+          <p><strong>Price:</strong> Rs. ${b.price}</p>
+        `;
+        container.appendChild(box);
+      });
     }
   </script>
 </body>
