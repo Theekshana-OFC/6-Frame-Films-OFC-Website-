@@ -3,152 +3,132 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LABRO Comments</title>
-
-  <!-- Firebase SDK Import -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLegQyNFv17CFC1NdyCLdYMmPSpSbfaRMI",
-      authDomain: "frame-films-ofc.firebaseapp.com",
-      projectId: "frame-films-ofc",
-      storageBucket: "frame-films-ofc.appspot.com",
-      messagingSenderId: "118575635457",
-      appId: "1:118575635457:web:dd949266a0f3bae10398e9"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Submit Comment
-    window.submitComment = async function () {
-      const name = document.getElementById("name").value.trim();
-      const comment = document.getElementById("comment").value.trim();
-
-      if (!name || !comment) {
-        alert("Please enter both name and comment.");
-        return;
-      }
-
-      await addDoc(collection(db, "comments"), {
-        name,
-        comment,
-        timestamp: serverTimestamp()
-      });
-
-      document.getElementById("name").value = "";
-      document.getElementById("comment").value = "";
-    };
-
-    // Display Comments
-    const display = document.getElementById("comments-display");
-    const q = query(collection(db, "comments"), orderBy("timestamp", "desc"));
-    onSnapshot(q, (snapshot) => {
-      display.innerHTML = "";
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const box = document.createElement("div");
-        box.className = "comment-box";
-        box.innerHTML = `
-          <strong>${data.name}</strong>
-          <p>${data.comment}</p>
-        `;
-        display.appendChild(box);
-      });
-    });
-  </script>
-
+  <title>Realtime Comments</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #000;
+      background-color: #000;
       color: white;
-      padding: 30px;
-      background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
-                        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
-      background-size: 40px 40px;
-      animation: moveGrid 10s linear infinite;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
     }
-
-    @keyframes moveGrid {
-      from { background-position: 0 0; }
-      to { background-position: 200px 0; }
-    }
-
     h1 {
       text-align: center;
       color: red;
-      margin-bottom: 20px;
     }
-
-    #comment-section {
-      max-width: 600px;
-      margin: auto;
-      background: #111;
+    #commentForm {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.6);
       padding: 20px;
       border: 2px solid red;
       border-radius: 15px;
     }
-
     input, textarea {
-      width: 100%;
       padding: 10px;
-      margin: 10px 0;
-      background: #1a0000;
-      border: 2px solid red;
-      border-radius: 8px;
+      background: #200000;
+      border: 1px solid red;
       color: white;
-      font-size: 14px;
+      border-radius: 10px;
     }
-
     button {
-      width: 100%;
-      background: red;
-      border: none;
       padding: 10px;
+      background: linear-gradient(to right, red, darkred);
       color: white;
       font-weight: bold;
-      border-radius: 8px;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
     }
-
-    button:hover {
-      background: darkred;
+    #comments {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
-    .comment-box {
+    .comment {
       background: #220000;
-      border: 2px solid red;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 20px;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+      border-left: 5px solid red;
+      padding: 10px 15px;
+      border-radius: 10px;
     }
-
-    .comment-box strong {
+    .comment strong {
       color: red;
-      font-size: 16px;
-    }
-
-    .comment-box p {
-      margin: 5px 0 0 0;
-      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <h1>💬 LABRO V1 BOT OFC - Comments</h1>
+  <h1>💬 Public Comments</h1>
 
-  <div id="comment-section">
-    <input type="text" id="name" placeholder="Your Name" />
-    <textarea id="comment" placeholder="Your Comment..."></textarea>
-    <button onclick="submitComment()">Submit Comment</button>
+  <form id="commentForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <textarea id="message" placeholder="Your Comment" required></textarea>
+    <button type="submit">Submit</button>
+  </form>
 
-    <div id="comments-display"></div>
-  </div>
+  <div id="comments"></div>
+
+  <script>
+    // Firebase Config (Replace this with yours)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDIegQvNFvI7CFc1NdyCL6vMnPsPSbfaRM",
+      authDomain: "frame-films-ofc.firebaseapp.com",
+      projectId: "frame-films-ofc",
+      storageBucket: "frame-films-ofc.appspot.com",
+      messagingSenderId: "118575635547",
+      appId: "1:118575635547:web:dd949266a0f3bae10398e9",
+      databaseURL: "https://frame-films-ofc-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const form = document.getElementById('commentForm');
+    const commentsDiv = document.getElementById('comments');
+
+    // Submit comment
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (name && message) {
+        const newCommentRef = db.ref('comments').push();
+        newCommentRef.set({
+          name: name,
+          message: message,
+          timestamp: Date.now()
+        });
+        form.reset();
+      }
+    });
+
+    // Display comments live
+    db.ref('comments').on('value', (snapshot) => {
+      commentsDiv.innerHTML = '';
+      const comments = snapshot.val();
+      if (comments) {
+        const sorted = Object.values(comments).sort((a, b) => b.timestamp - a.timestamp);
+        sorted.forEach(comment => {
+          const div = document.createElement('div');
+          div.classList.add('comment');
+          div.innerHTML = <strong>${comment.name}</strong><br>${comment.message};
+          commentsDiv.appendChild(div);
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>
