@@ -1,122 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>6 Frame Films OFC - Comments</title>
+  <title>Booked Tickets</title>
   <style>
     body {
-      background-color: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-    }
-    h1 {
-      color: orangered;
-    }
-    #commentForm {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 400px;
-      margin-bottom: 20px;
-    }
-    textarea {
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      resize: none;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    button {
-      background-color: orangered;
+      background-color: #000;
       color: white;
-      border: none;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
     }
-    .comment-box {
-      background: #1e1e1e;
+
+    .ticket-box {
+      background-color: #1c1c1c;
+      border-left: 5px solid red;
       padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 10px;
+      border-radius: 10px;
+      width: 260px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: red;
       width: 100%;
-      max-width: 500px;
-      word-wrap: break-word;
-      border-left: 4px solid orangered;
+    }
+
+    p {
+      margin: 8px 0;
     }
   </style>
 </head>
 <body>
-
-  <h1>🔥 6 Frame Films OFC - Comments</h1>
-
-  <form id="commentForm">
-    <textarea id="commentInput" rows="4" placeholder="Type your comment..."></textarea>
-    <button type="submit">Submit Comment</button>
-  </form>
-
-  <div id="commentsContainer"></div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <h2>All Booked Tickets</h2>
 
   <script>
-    // 🔥 Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDlcgQyNFw17CFc1NdyCLdYmPSpSbfaRmI",
-      authDomain: "frame-films-ofc.firebaseapp.com",
-      databaseURL: "https://frame-films-ofc-default-rtdb.firebaseio.com",
-      projectId: "frame-films-ofc",
-      storageBucket: "frame-films-ofc.appspot.com",
-      messagingSenderId: "1035756355467",
-      appId: "1:1035756355467:web:dd9492e66afb3bae10398e"
-    };
+    const allData = JSON.parse(localStorage.getItem("allTickets")) || [];
 
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    const commentForm = document.getElementById('commentForm');
-    const commentInput = document.getElementById('commentInput');
-    const commentsContainer = document.getElementById('commentsContainer');
-
-    // Submit comment to Firebase
-    commentForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const commentText = commentInput.value.trim();
-      if (commentText) {
-        const commentRef = database.ref('comments');
-        const newComment = {
-          text: commentText,
-          timestamp: Date.now()
-        };
-        commentRef.push(newComment);
-        commentInput.value = '';
-      }
-    });
-
-    // Show comments live from Firebase
-    const commentRef = database.ref('comments');
-    commentRef.on('value', (snapshot) => {
-      commentsContainer.innerHTML = '';
-      const comments = snapshot.val();
-      if (comments) {
-        const sortedKeys = Object.keys(comments).sort((a, b) => comments[b].timestamp - comments[a].timestamp);
-        sortedKeys.forEach((key) => {
-          const comment = comments[key];
-          const div = document.createElement('div');
-          div.className = 'comment-box';
-          div.textContent = comment.text;
-          commentsContainer.appendChild(div);
-        });
-      }
-    });
+    if (allData.length > 0) {
+      allData.forEach(data => {
+        const box = document.createElement("div");
+        box.className = "ticket-box";
+        box.innerHTML = `
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>WhatsApp:</strong> ${data.whatsapp}</p>
+          <p><strong>Ticket Price:</strong> ${data.price}</p>
+          <p><strong>Ticket Number:</strong> ${data.ticketNumber}</p>
+        `;
+        document.body.appendChild(box);
+      });
+    } else {
+      document.body.innerHTML += "<h3>No Tickets Found</h3>";
+    }
   </script>
 </body>
 </html>
