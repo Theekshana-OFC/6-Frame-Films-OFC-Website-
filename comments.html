@@ -1,114 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>6 Frame Films OFC - Comments</title>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <meta charset="UTF-8">
+  <title>Comment System</title>
   <style>
     body {
-      background-color: #1a1a1a;
+      background: #0a0a0a;
       color: white;
       font-family: Arial, sans-serif;
-      text-align: center;
       padding: 20px;
     }
-
-    h2 {
-      color: #ff3300;
+    .box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px red;
     }
-
     input, textarea {
-      width: 80%;
-      max-width: 400px;
+      width: 100%;
       padding: 10px;
-      margin: 10px auto;
-      display: block;
+      background: #111;
       border: none;
+      border-bottom: 2px solid red;
+      color: white;
+      margin-bottom: 10px;
       border-radius: 5px;
     }
-
     button {
-      padding: 10px 20px;
-      background-color: #ff3300;
+      background: red;
       color: white;
+      padding: 10px 20px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: transform 0.3s ease;
     }
-
-    .comment-box {
-      background-color: #262626;
-      border: 1px solid #ff3300;
+    button:hover {
+      transform: scale(1.05);
+    }
+    .comment {
+      background: #111;
+      border-left: 5px solid red;
       padding: 10px;
       margin: 10px auto;
-      width: 80%;
       max-width: 500px;
       border-radius: 5px;
-      text-align: left;
+      animation: slideRight 1s ease forwards;
+    }
+    @keyframes slideRight {
+      0% { transform: translateX(-100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-  <h2>💬 6 Frame Films OFC - Comments</h2>
+  <div class="box">
+    <h2>💬 Leave a Comment</h2>
+    <input type="text" id="name" placeholder="Your Name">
+    <textarea id="comment" rows="4" placeholder="Your Comment"></textarea>
+    <button onclick="postComment()">Post</button>
+  </div>
 
-  <input type="text" id="nameInput" placeholder="Your Name">
-  <textarea id="commentInput" rows="4" placeholder="Your Comment"></textarea>
-  <button onclick="submitComment()">Submit Comment</button>
+  <div id="comments"></div>
 
-  <div id="commentsContainer"></div>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
   <script>
-    // Firebase config
+    // Firebase Config
     const firebaseConfig = {
-      apiKey: "AIzaSyDlcgQyNFw17CFc1NdyCLdYmPSpSbfaRmI",
-      authDomain: "frame-films-ofc.firebaseapp.com",
-      databaseURL: "https://frame-films-ofc-default-rtdb.firebaseio.com/",
-      projectId: "frame-films-ofc",
-      storageBucket: "frame-films-ofc.appspot.com",
-      messagingSenderId: "1035756355467",
-      appId: "1:1035756355467:web:dd9492e66afb3bae10398e"
+      apiKey: "AIzaSyB9L3XQKBsJqY8cOzVdNumbVa4Vq8QaOhE",
+      authDomain: "comments-system-e1416.firebaseapp.com",
+      databaseURL: "https://comments-system-e1416-default-rtdb.firebaseio.com",
+      projectId: "comments-system-e1416",
+      storageBucket: "comments-system-e1416.firebasestorage.app",
+      messagingSenderId: "437571712889",
+      appId: "1:437571712889:web:ed7e85b17d59404b55e1a8",
+      measurementId: "G-045QNTPL8M"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function submitComment() {
-      const name = document.getElementById("nameInput").value.trim();
-      const comment = document.getElementById("commentInput").value.trim();
+    // Post comment
+    function postComment() {
+      const name = document.getElementById('name').value.trim();
+      const comment = document.getElementById('comment').value.trim();
 
-      if (name && comment) {
-        db.ref("comments").push({
-          name: name,
-          comment: comment,
-          timestamp: Date.now()
-        });
+      if (!name || !comment) return alert("Fill in both fields!");
 
-        document.getElementById("nameInput").value = "";
-        document.getElementById("commentInput").value = "";
-      }
+      const commentData = {
+        name: name,
+        comment: comment,
+        timestamp: Date.now()
+      };
+
+      db.ref('comments').push(commentData);
+      document.getElementById('name').value = '';
+      document.getElementById('comment').value = '';
     }
 
-    function loadComments() {
-      db.ref("comments").on("value", (snapshot) => {
-        const container = document.getElementById("commentsContainer");
-        container.innerHTML = "";
-
-        const data = snapshot.val();
-        if (data) {
-          const sorted = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
-          sorted.forEach(entry => {
-            const box = document.createElement("div");
-            box.className = "comment-box";
-            box.innerHTML = <strong>${entry.name}:</strong><br>${entry.comment};
-            container.appendChild(box);
-          });
-        }
+    // Display comments
+    const commentsDiv = document.getElementById('comments');
+    db.ref('comments').on('value', snapshot => {
+      commentsDiv.innerHTML = '';
+      const data = snapshot.val();
+      if (!data) return;
+      const entries = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+      entries.forEach(([id, comment]) => {
+        commentsDiv.innerHTML += `
+          <div class="comment">
+            <strong>${comment.name}</strong><br>
+            ${comment.comment}
+          </div>
+        `;
       });
-    }
-
-    loadComments();
+    });
   </script>
-
 </body>
 </html>
