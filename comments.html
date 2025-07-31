@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LABRO Comments (Firebase)</title>
+  <title>LABRO Comments</title>
+
+  <!-- Firebase SDK Import -->
   <script type="module">
-    // Import Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -21,16 +22,19 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Add comment
-    window.addComment = async function () {
+    // Submit Comment
+    window.submitComment = async function () {
       const name = document.getElementById("name").value.trim();
       const comment = document.getElementById("comment").value.trim();
 
-      if (!name || !comment) return;
+      if (!name || !comment) {
+        alert("Please enter both name and comment.");
+        return;
+      }
 
       await addDoc(collection(db, "comments"), {
         name,
-        text: comment,
+        comment,
         timestamp: serverTimestamp()
       });
 
@@ -38,7 +42,7 @@
       document.getElementById("comment").value = "";
     };
 
-    // Realtime load comments
+    // Display Comments
     const display = document.getElementById("comments-display");
     const q = query(collection(db, "comments"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
@@ -47,7 +51,10 @@
         const data = doc.data();
         const box = document.createElement("div");
         box.className = "comment-box";
-        box.innerHTML = <strong>${data.name}</strong><p>${data.text}</p>;
+        box.innerHTML = `
+          <strong>${data.name}</strong>
+          <p>${data.comment}</p>
+        `;
         display.appendChild(box);
       });
     });
@@ -56,12 +63,11 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #000;
+      background: #000;
       color: white;
-      padding: 20px;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px);
+      padding: 30px;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
+                        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
       background-size: 40px 40px;
       animation: moveGrid 10s linear infinite;
     }
@@ -71,62 +77,75 @@
       to { background-position: 200px 0; }
     }
 
-    h1 { text-align: center; color: red; }
+    h1 {
+      text-align: center;
+      color: red;
+      margin-bottom: 20px;
+    }
 
     #comment-section {
       max-width: 600px;
       margin: auto;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 25px;
+      background: #111;
+      padding: 20px;
       border: 2px solid red;
-      border-radius: 20px;
+      border-radius: 15px;
     }
 
     input, textarea {
       width: 100%;
       padding: 10px;
-      margin: 8px 0;
-      background: #200000;
+      margin: 10px 0;
+      background: #1a0000;
       border: 2px solid red;
-      border-radius: 10px;
+      border-radius: 8px;
       color: white;
+      font-size: 14px;
     }
 
     button {
-      background: linear-gradient(to right, red, darkred);
-      padding: 10px;
+      width: 100%;
+      background: red;
       border: none;
-      border-radius: 10px;
+      padding: 10px;
       color: white;
       font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
     }
 
     button:hover {
-      background: red;
+      background: darkred;
     }
 
     .comment-box {
-      margin-top: 20px;
-      padding: 15px;
+      background: #220000;
       border: 2px solid red;
-      border-radius: 15px;
-      background: linear-gradient(to bottom right, #220000, #400000);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
     }
 
     .comment-box strong {
       color: red;
+      font-size: 16px;
+    }
+
+    .comment-box p {
+      margin: 5px 0 0 0;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🔥 Comments - LABRO V1 BOT OFC</h1>
+  <h1>💬 LABRO V1 BOT OFC - Comments</h1>
+
   <div id="comment-section">
-    <input type="text" id="name" placeholder="Your Name" required />
-    <textarea id="comment" placeholder="Your Comment" required></textarea>
-    <button onclick="addComment()">Submit</button>
+    <input type="text" id="name" placeholder="Your Name" />
+    <textarea id="comment" placeholder="Your Comment..."></textarea>
+    <button onclick="submitComment()">Submit Comment</button>
 
     <div id="comments-display"></div>
   </div>
