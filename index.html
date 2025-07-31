@@ -125,21 +125,6 @@
       font-size: 0.9rem;
       text-align: center;
     }
-
-    #main-content, #closed-message {
-      display: none;
-    }
-
-    #closed-message {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 3em;
-      color: red;
-      text-align: center;
-      padding: 20px;
-    }
   </style>
 </head>
 <body>
@@ -173,32 +158,6 @@
 
     <p class="rights">© 6 ꜰʀᴀᴍᴇ ꜰɪʟᴍꜱ ᴀʟʟ ʀɪɢʜᴛꜱ ʀᴇꜱᴇʀᴠᴇᴅ</p>
   </div>
-
-  <div id="closed-message">CLOSED</div>
-
-  <script>
-    function checkTime() {
-      const now = new Date();
-      const minutesNow = now.getHours() * 60 + now.getMinutes();
-
-      const openTime = 7 * 60 +58;  // 12:10 AM
-      const closeTime =8  * 60 +59 ; // 4:50 AM
-
-      const main = document.getElementById("main-content");
-      const closed = document.getElementById("closed-message");
-
-      if (minutesNow >= openTime && minutesNow < closeTime) {
-        main.style.display = "block";
-        closed.style.display = "none";
-      } else {
-        main.style.display = "none";
-        closed.style.display = "flex";
-      }
-    }
-
-    checkTime();
-    setInterval(checkTime, 60000);
-  </script>
 
 </body>
 </html>
