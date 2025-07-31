@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>6 Frame Films OFC</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: Arial, sans-serif;
@@ -29,106 +25,6 @@
       to { background-position: 200px 0; }
     }
 
-    .menu-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: transparent;
-      border: 1.5px solid red;
-      border-radius: 8px;
-      padding: 6px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-
-    .menu-icon {
-      width: 18px;
-      height: 2px;
-      background-color: red;
-      margin: 3px 0;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 80%;
-      max-width: 300px;
-      height: 100%;
-      background-color: #000;
-      border-right: 2px solid red;
-      padding: 30px 20px;
-      box-shadow: 0 0 15px red;
-      z-index: 1002;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-    }
-
-    .sidebar.active {
-      transform: translateX(0);
-    }
-
-    .sidebar h2 {
-      color: #ff3333;
-      margin-bottom: 20px;
-    }
-
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .sidebar ul li {
-      margin-bottom: 15px;
-    }
-
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      font-size: 1.2rem;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 22px;
-      color: red;
-      cursor: pointer;
-      border: 1.5px solid red;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      line-height: 28px;
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      opacity: 0.95;
-      z-index: 998;
-      display: none;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-
-    body.no-scroll {
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .sidebar, .overlay {
-      pointer-events: auto;
-    }
-
     .logo {
       width: 160px;
       height: 160px;
@@ -146,16 +42,7 @@
       text-align: center;
     }
 
-    h1 span {
-      color: red;
-    }
-
-    p {
-      color: #ccc;
-      text-align: center;
-      max-width: 300px;
-      margin: auto;
-    }
+    h1 span { color: red; }
 
     .buttons {
       margin-top: 25px;
@@ -173,7 +60,6 @@
       color: white;
       text-decoration: none;
       font-weight: bold;
-      text-align: center;
       transition: 0.3s;
     }
 
@@ -215,20 +101,10 @@
       margin-bottom: 15px;
     }
 
-    .card h3 {
-      color: white;
-      font-size: 1.5rem;
-      margin-bottom: 5px;
-    }
-
-    .card .role {
-      color: #ccc;
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-    }
+    .card h3 { color: white; font-size: 1.5rem; margin-bottom: 5px; }
+    .card .role { color: #ccc; font-size: 1.1rem; margin-bottom: 15px; }
 
     .contact-btn {
-      display: inline-block;
       padding: 10px 20px;
       font-size: 1rem;
       color: red;
@@ -249,58 +125,78 @@
       font-size: 0.9rem;
       text-align: center;
     }
+
+    #main-content, #closed-message {
+      display: none;
+    }
+
+    #closed-message {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3em;
+      color: red;
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Overlay -->
-  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <div id="main-content">
+    <img src="https://github.com/NOVA-MD-OFC/NOVA-MD-Help/blob/main/WhatsApp%20Image%202025-07-29%20at%2020.42.46_c6e92c7b.jpg?raw=true" alt="Logo" class="logo" />
+    <h1>WELCOME TO <span>6 FRAME FILMS OFC</span></h1>
 
-  <!-- Logo -->
-  <img src="https://github.com/Theekshana-OFC/6-Frame-Films-OFC-Website-/blob/main/photos/logo.jpg?raw=true" alt="Logo" class="logo" />
-
-  <!-- Text -->
-  <h1>WELCOME TO <span>6 FRAME FILMS OFC</span></h1>
-  <p></p>
-
-  <!-- Buttons -->
-  <div class="buttons">
-    <a href="team.html">Team</a>
-    <a href="project.html">News</a>
-    <a href="book tickets.html">Book Ticket</a>
-  </div>
-
-  <!-- Support Cards -->
-  <div class="support-cards">
-    <div class="card">
-      <img src="https://github.com/Theekshana-OFC/6-Frame-Films-OFC-Website-/blob/main/photos/Theekshana.jpg?raw=true" alt="" class="card-img">
-      <h3>Theekshana</h3>
-      <p class="role">ꜱɪᴛᴇ ᴏᴡɴᴇʀ</p>
-      <a href="https://wa.me/+94778080044" class="contact-btn">𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗨𝘀</a>
+    <div class="buttons">
+      <a href="team.html">Team</a>
+      <a href="project.html">Update</a>
+      <a href="book tickets.html">Book Ticket</a>
     </div>
 
-    <div class="card">
-      <img src="https://github.com/NOVA-MD-OFC/NOVA-MD-Help/blob/main/WhatsApp%20Image%202025-07-29%20at%2019.51.52_7ef00c30.jpg?raw=true" alt="" class="card-img">
-      <h3>Malshani</h3>
-      <p class="role">ꜱɪᴛᴇ ᴀᴅᴍɪɴ</p>
-      <a href="https://wa.me/+94761288912" class="contact-btn">𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗨𝘀</a>
+    <div class="support-cards">
+      <div class="card">
+        <img src="vvvv" alt="" class="card-img">
+        <h3>Theekshana</h3>
+        <p class="role">ꜱɪᴛᴇ ᴏᴡɴᴇʀ</p>
+        <a href="https://wa.me/+94778080044" class="contact-btn">𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗨𝘀</a>
+      </div>
+
+      <div class="card">
+        <img src="https://github.com/NOVA-MD-OFC/NOVA-MD-Help/blob/main/WhatsApp%20Image%202025-07-29%20at%2019.51.52_7ef00c30.jpg?raw=true" alt="" class="card-img">
+        <h3>Malshani</h3>
+        <p class="role">ꜱɪᴛᴇ ᴀᴅᴍɪɴ</p>
+        <a href="https://wa.me/+94761288912" class="contact-btn">𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗨𝘀</a>
+      </div>
     </div>
+
+    <p class="rights">© 6 ꜰʀᴀᴍᴇ ꜰɪʟᴍꜱ ᴀʟʟ ʀɪɢʜᴛꜱ ʀᴇꜱᴇʀᴠᴇᴅ</p>
   </div>
 
-  <!-- Rights -->
-  <p class="rights">© 6 ꜰʀᴀᴍᴇ ꜰɪʟᴍꜱ ᴀʟʟ ʀɪɢʜᴛꜱ ʀᴇꜱᴇʀᴠᴇᴅ</p>
+  <div id="closed-message">CLOSED</div>
 
-  <!-- JS -->
   <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const body = document.body;
+    function checkTime() {
+      const now = new Date();
+      const minutesNow = now.getHours() * 60 + now.getMinutes();
 
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-      body.classList.toggle('no-scroll');
+      const openTime = 7 * 60 + 10;  // 12:10 AM
+      const closeTime = 00 * 60 + 23; // 4:50 AM
+
+      const main = document.getElementById("main-content");
+      const closed = document.getElementById("closed-message");
+
+      if (minutesNow >= openTime && minutesNow < closeTime) {
+        main.style.display = "block";
+        closed.style.display = "none";
+      } else {
+        main.style.display = "none";
+        closed.style.display = "flex";
+      }
     }
+
+    checkTime();
+    setInterval(checkTime, 60000);
   </script>
 
 </body>
