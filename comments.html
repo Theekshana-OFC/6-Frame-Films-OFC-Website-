@@ -1,134 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Realtime Comments</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <meta charset="UTF-8">
+  <title>Live Comment System</title>
   <style>
     body {
       background-color: #000;
       color: white;
       font-family: Arial, sans-serif;
       padding: 20px;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
     }
+
     h1 {
-      text-align: center;
       color: red;
+      text-align: center;
     }
-    #commentForm {
-      max-width: 500px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: rgba(0, 0, 0, 0.6);
+
+    #comment-form {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      background: #1a0000;
       padding: 20px;
       border: 2px solid red;
       border-radius: 15px;
     }
+
     input, textarea {
+      width: 100%;
+      margin: 10px 0;
       padding: 10px;
-      background: #200000;
       border: 1px solid red;
+      background: black;
       color: white;
       border-radius: 10px;
     }
+
     button {
-      padding: 10px;
-      background: linear-gradient(to right, red, darkred);
+      padding: 10px 20px;
+      background: red;
       color: white;
       font-weight: bold;
       border: none;
       border-radius: 10px;
       cursor: pointer;
     }
-    #comments {
-      margin-top: 30px;
+
+    button:hover {
+      background: #ff4d4d;
+    }
+
+    #comment-display {
+      max-width: 600px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 15px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
     }
-    .comment {
+
+    .comment-box {
       background: #220000;
-      border-left: 5px solid red;
-      padding: 10px 15px;
+      padding: 15px;
+      border: 1px solid red;
       border-radius: 10px;
     }
-    .comment strong {
+
+    .comment-box strong {
       color: red;
     }
   </style>
 </head>
 <body>
 
-  <h1>💬 Public Comments</h1>
+  <h1>💬 Live Comment Section</h1>
 
-  <form id="commentForm">
-    <input type="text" id="name" placeholder="Your Name" required>
+  <form id="comment-form">
+    <input type="text" id="name" placeholder="Your Name" required />
     <textarea id="message" placeholder="Your Comment" required></textarea>
     <button type="submit">Submit</button>
   </form>
 
-  <div id="comments"></div>
+  <div id="comment-display"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Firebase Config (Replace this with yours)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDIegQvNFvI7CFc1NdyCL6vMnPsPSbfaRM",
-      authDomain: "frame-films-ofc.firebaseapp.com",
-      projectId: "frame-films-ofc",
-      storageBucket: "frame-films-ofc.appspot.com",
-      messagingSenderId: "118575635547",
-      appId: "1:118575635547:web:dd949266a0f3bae10398e9",
-      databaseURL: "https://frame-films-ofc-default-rtdb.asia-southeast1.firebasedatabase.app"
+    // Replace with your actual Firebase config
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const form = document.getElementById('commentForm');
-    const commentsDiv = document.getElementById('comments');
+    const form = document.getElementById("comment-form");
+    const display = document.getElementById("comment-display");
 
-    // Submit comment
-    form.addEventListener('submit', function(e) {
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const message = document.getElementById('message').value.trim();
+      const name = document.getElementById("name").value.trim();
+      const message = document.getElementById("message").value.trim();
 
       if (name && message) {
-        const newCommentRef = db.ref('comments').push();
-        newCommentRef.set({
+        const comment = {
           name: name,
           message: message,
           timestamp: Date.now()
-        });
+        };
+
+        db.ref("comments").push(comment);
         form.reset();
       }
     });
 
-    // Display comments live
-    db.ref('comments').on('value', (snapshot) => {
-      commentsDiv.innerHTML = '';
-      const comments = snapshot.val();
-      if (comments) {
-        const sorted = Object.values(comments).sort((a, b) => b.timestamp - a.timestamp);
-        sorted.forEach(comment => {
-          const div = document.createElement('div');
-          div.classList.add('comment');
-          div.innerHTML = <strong>${comment.name}</strong><br>${comment.message};
-          commentsDiv.appendChild(div);
-        });
-      }
+    // Listen for new comments
+    db.ref("comments").on("child_added", function(snapshot) {
+      const data = snapshot.val();
+      const box = document.createElement("div");
+      box.className = "comment-box";
+      box.innerHTML = <strong>${data.name}</strong><p>${data.message}</p>;
+      display.appendChild(box);
     });
   </script>
-
 </body>
 </html>
