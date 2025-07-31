@@ -3,239 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bookings</title>
+  <title>LABRO Comments</title>
+
+  <!-- Firebase SDK Import -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLegQyNFv17CFC1NdyCLdYMmPSpSbfaRMI",
+      authDomain: "frame-films-ofc.firebaseapp.com",
+      projectId: "frame-films-ofc",
+      storageBucket: "frame-films-ofc.appspot.com",
+      messagingSenderId: "118575635457",
+      appId: "1:118575635457:web:dd949266a0f3bae10398e9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Submit Comment
+    window.submitComment = async function () {
+      const name = document.getElementById("name").value.trim();
+      const comment = document.getElementById("comment").value.trim();
+
+      if (!name || !comment) {
+        alert("Please enter both name and comment.");
+        return;
+      }
+
+      await addDoc(collection(db, "comments"), {
+        name,
+        comment,
+        timestamp: serverTimestamp()
+      });
+
+      document.getElementById("name").value = "";
+      document.getElementById("comment").value = "";
+    };
+
+    // Display Comments
+    const display = document.getElementById("comments-display");
+    const q = query(collection(db, "comments"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+      display.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const box = document.createElement("div");
+        box.className = "comment-box";
+        box.innerHTML = `
+          <strong>${data.name}</strong>
+          <p>${data.comment}</p>
+        `;
+        display.appendChild(box);
+      });
+    });
+  </script>
+
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #000;
+      background: #000;
       color: white;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
-      animation: moveGrid 12s linear infinite;
+      padding: 30px;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
+                        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
+      background-size: 40px 40px;
+      animation: moveGrid 10s linear infinite;
     }
 
     @keyframes moveGrid {
       from { background-position: 0 0; }
-      to { background-position: 200px 200px; }
+      to { background-position: 200px 0; }
     }
 
-    .top-bar {
-      max-width: 1400px;
-      margin: 30px auto 10px;
-      padding: 0 20px;
-    }
-
-    .search-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      gap: 10px;
-    }
-
-    .search-box input {
-      width: 100%;
-      max-width: 1000px;
-      padding: 15px;
-      border-radius: 15px;
-      border: 2px solid red;
-      background-color: #111;
-      color: white;
-      font-size: 1rem;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-    }
-
-    .wrapper {
-      max-width: 1400px;
-      margin: auto;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .box {
-      position: relative;
-      border: 2px solid red;
-      border-radius: 15px;
-      background: linear-gradient(to bottom right, #220000, #400000);
-      padding: 15px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
-      transition: transform 0.2s;
-    }
-
-    .box:hover {
-      transform: scale(1.03);
-    }
-
-    .box h3 {
-      color: #ff4444;
-      margin-bottom: 8px;
-      font-size: 1.1rem;
-    }
-
-    .box p {
-      margin: 4px 0;
-      font-size: 0.95rem;
-    }
-
-    .delete-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: red;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      padding: 5px 8px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: 0.3s ease;
-    }
-
-    .delete-btn:hover {
-      background-color: darkred;
-      transform: scale(1.1);
-    }
-
-    /* Lock screen styles */
-    #lockScreen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-    }
-
-    #lockScreen input {
-      padding: 15px;
-      border: 2px solid red;
-      background-color: #111;
-      color: white;
-      font-size: 1rem;
-      border-radius: 10px;
-      width: 250px;
+    h1 {
       text-align: center;
-      box-shadow: 0 0 10px rgba(255,0,0,0.5);
-      margin-bottom: 10px;
+      color: red;
+      margin-bottom: 20px;
     }
 
-    #lockScreen button {
-      padding: 10px 20px;
-      background: red;
+    #comment-section {
+      max-width: 600px;
+      margin: auto;
+      background: #111;
+      padding: 20px;
+      border: 2px solid red;
+      border-radius: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: #1a0000;
+      border: 2px solid red;
+      border-radius: 8px;
       color: white;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      background: red;
       border: none;
+      padding: 10px;
+      color: white;
+      font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
     }
 
-    #lockScreen button:hover {
+    button:hover {
       background: darkred;
-      transform: scale(1.05);
     }
 
-    #errorMsg {
+    .comment-box {
+      background: #220000;
+      border: 2px solid red;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    }
+
+    .comment-box strong {
       color: red;
-      font-size: 0.9rem;
-      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    .comment-box p {
+      margin: 5px 0 0 0;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Lock Screen -->
-  <div id="lockScreen">
-    <input type="password" id="passwordInput" placeholder="Enter Password..." />
-    <button onclick="checkPassword()">Unlock</button>
-    <div id="errorMsg"></div>
+  <h1>💬 LABRO V1 BOT OFC - Comments</h1>
+
+  <div id="comment-section">
+    <input type="text" id="name" placeholder="Your Name" />
+    <textarea id="comment" placeholder="Your Comment..."></textarea>
+    <button onclick="submitComment()">Submit Comment</button>
+
+    <div id="comments-display"></div>
   </div>
 
-  <!-- Search -->
-  <div class="top-bar">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search by Name or WhatsApp Number...">
-    </div>
-  </div>
-
-  <!-- Box Container -->
-  <div class="wrapper" id="data-wrapper">
-    <!-- Boxes appear here -->
-  </div>
-
-  <script>
-    // Password check
-    const lockScreen = document.getElementById("lockScreen");
-    const passwordInput = document.getElementById("passwordInput");
-    const errorMsg = document.getElementById("errorMsg");
-
-    function checkPassword() {
-      if (passwordInput.value === "Theekshana2010") {
-        lockScreen.style.display = "none";
-      } else {
-        errorMsg.textContent = "Incorrect password!";
-      }
-    }
-
-    // Load data
-    const container = document.getElementById("data-wrapper");
-    const searchInput = document.getElementById("searchInput");
-
-    let allData = JSON.parse(localStorage.getItem("bookings") || "[]");
-
-    function saveData() {
-      localStorage.setItem("bookings", JSON.stringify(allData));
-    }
-
-    function displayBoxes(dataList) {
-      container.innerHTML = '';
-      dataList.forEach((data, index) => {
-        const box = document.createElement("div");
-        box.className = "box";
-        box.innerHTML = `
-          <button class="delete-btn" data-index="${index}">🗑</button>
-          <h3>Ticket #${index + 1}</h3>
-          <p><strong>Name:</strong> ${data.name}</p>
-          <p><strong>WhatsApp:</strong> ${data.phone}</p>
-          <p><strong>Gender:</strong> ${data.gender}</p>
-          <p><strong>Price:</strong> Rs. ${data.price}</p>
-        `;
-        container.appendChild(box);
-      });
-
-      // Delete
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-          const indexToRemove = parseInt(this.getAttribute('data-index'));
-          allData.splice(indexToRemove, 1);
-          saveData();
-          displayBoxes(allData);
-        });
-      });
-    }
-
-    displayBoxes(allData);
-
-    searchInput.addEventListener("input", function () {
-      const keyword = this.value.toLowerCase();
-      const filtered = allData.filter(d =>
-        d.name.toLowerCase().includes(keyword) ||
-        d.phone.toLowerCase().includes(keyword)
-      );
-      displayBoxes(filtered);
-    });
-
-    // Allow Enter key for password
-    passwordInput.addEventListener("keydown", function(e) {
-      if (e.key === "Enter") checkPassword();
-    });
-  </script>
 </body>
 </html>
