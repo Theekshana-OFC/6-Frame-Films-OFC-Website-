@@ -99,9 +99,64 @@
       background-color: darkred;
       transform: scale(1.1);
     }
+
+    /* Lock screen styles */
+    #lockScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    #lockScreen input {
+      padding: 15px;
+      border: 2px solid red;
+      background-color: #111;
+      color: white;
+      font-size: 1rem;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255,0,0,0.5);
+      margin-bottom: 10px;
+    }
+
+    #lockScreen button {
+      padding: 10px 20px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    #lockScreen button:hover {
+      background: darkred;
+      transform: scale(1.05);
+    }
+
+    #errorMsg {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Lock Screen -->
+  <div id="lockScreen">
+    <input type="password" id="passwordInput" placeholder="Enter Password..." />
+    <button onclick="checkPassword()">Unlock</button>
+    <div id="errorMsg"></div>
+  </div>
 
   <!-- Search -->
   <div class="top-bar">
@@ -116,6 +171,20 @@
   </div>
 
   <script>
+    // Password check
+    const lockScreen = document.getElementById("lockScreen");
+    const passwordInput = document.getElementById("passwordInput");
+    const errorMsg = document.getElementById("errorMsg");
+
+    function checkPassword() {
+      if (passwordInput.value === "Theekshana2010") {
+        lockScreen.style.display = "none";
+      } else {
+        errorMsg.textContent = "Incorrect password!";
+      }
+    }
+
+    // Load data
     const container = document.getElementById("data-wrapper");
     const searchInput = document.getElementById("searchInput");
 
@@ -141,9 +210,8 @@
         container.appendChild(box);
       });
 
-      // Add delete listeners
-      const deleteButtons = document.querySelectorAll('.delete-btn');
-      deleteButtons.forEach(btn => {
+      // Delete
+      document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function () {
           const indexToRemove = parseInt(this.getAttribute('data-index'));
           allData.splice(indexToRemove, 1);
@@ -162,6 +230,11 @@
         d.phone.toLowerCase().includes(keyword)
       );
       displayBoxes(filtered);
+    });
+
+    // Allow Enter key for password
+    passwordInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") checkPassword();
     });
   </script>
 </body>
