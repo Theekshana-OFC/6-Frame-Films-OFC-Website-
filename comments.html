@@ -3,21 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LABRO V1 BOT OFC - Comments</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  <title>LABRO Comments (Firebase)</title>
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLegQyNFv17CFC1NdyCLdYMmPSpSbfaRMI",
+      authDomain: "frame-films-ofc.firebaseapp.com",
+      projectId: "frame-films-ofc",
+      storageBucket: "frame-films-ofc.appspot.com",
+      messagingSenderId: "118575635457",
+      appId: "1:118575635457:web:dd949266a0f3bae10398e9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Add comment
+    window.addComment = async function () {
+      const name = document.getElementById("name").value.trim();
+      const comment = document.getElementById("comment").value.trim();
+
+      if (!name || !comment) return;
+
+      await addDoc(collection(db, "comments"), {
+        name,
+        text: comment,
+        timestamp: serverTimestamp()
+      });
+
+      document.getElementById("name").value = "";
+      document.getElementById("comment").value = "";
+    };
+
+    // Realtime load comments
+    const display = document.getElementById("comments-display");
+    const q = query(collection(db, "comments"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+      display.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const box = document.createElement("div");
+        box.className = "comment-box";
+        box.innerHTML = <strong>${data.name}</strong><p>${data.text}</p>;
+        display.appendChild(box);
+      });
+    });
+  </script>
+
+  <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #000;
+      color: white;
+      padding: 20px;
       background-image:
         repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px),
         repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px);
       background-size: 40px 40px;
       animation: moveGrid 10s linear infinite;
-      color: #fff;
-      min-height: 100vh;
-      padding: 20px;
     }
 
     @keyframes moveGrid {
@@ -25,152 +71,65 @@
       to { background-position: 200px 0; }
     }
 
-    h1 {
-      text-align: center;
-      font-size: 2em;
-      margin-bottom: 20px;
-      color: red;
-    }
+    h1 { text-align: center; color: red; }
 
     #comment-section {
       max-width: 600px;
-      margin: 0 auto;
-      background: rgba(0, 0, 0, 0.7);
+      margin: auto;
+      background: rgba(0, 0, 0, 0.8);
       padding: 25px;
       border: 2px solid red;
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
     input, textarea {
+      width: 100%;
       padding: 10px;
-      border-radius: 10px;
-      border: none;
+      margin: 8px 0;
       background: #200000;
-      color: white;
       border: 2px solid red;
+      border-radius: 10px;
+      color: white;
     }
 
     button {
+      background: linear-gradient(to right, red, darkred);
       padding: 10px;
+      border: none;
       border-radius: 10px;
-      background: linear-gradient(to right, #ff0000, #800000);
       color: white;
       font-weight: bold;
-      border: none;
       cursor: pointer;
     }
 
     button:hover {
-      background: #ff3333;
-    }
-
-    #comments-display {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+      background: red;
     }
 
     .comment-box {
-      background: linear-gradient(to bottom right, #220000, #400000);
-      border: 2px solid red;
-      border-radius: 20px;
+      margin-top: 20px;
       padding: 15px;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.3);
+      border: 2px solid red;
+      border-radius: 15px;
+      background: linear-gradient(to bottom right, #220000, #400000);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
     }
 
     .comment-box strong {
       color: red;
-      font-size: 1.2em;
-    }
-
-    .comment-box p {
-      margin-top: 5px;
-    }
-
-    .delete-btn {
-      margin-top: 10px;
-      background: transparent;
-      border: 1px solid red;
-      color: red;
-      padding: 6px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .delete-btn:hover {
-      background: red;
-      color: black;
     }
   </style>
 </head>
 <body>
 
-  <h1>💬 Comments Section</h1>
-
+  <h1>🔥 Comments - LABRO V1 BOT OFC</h1>
   <div id="comment-section">
-    <form id="comment-form">
-      <input type="text" id="name" placeholder="Your Name" required>
-      <textarea id="comment" placeholder="Your Comment" required></textarea>
-      <button type="submit">Submit</button>
-    </form>
+    <input type="text" id="name" placeholder="Your Name" required />
+    <textarea id="comment" placeholder="Your Comment" required></textarea>
+    <button onclick="addComment()">Submit</button>
 
     <div id="comments-display"></div>
   </div>
-
-  <script>
-    const form = document.getElementById("comment-form");
-    const display = document.getElementById("comments-display");
-
-    // Load saved comments from localStorage
-    window.onload = function () {
-      const saved = JSON.parse(localStorage.getItem("comments")) || [];
-      saved.forEach((comment, index) => {
-        renderComment(comment.name, comment.text, index);
-      });
-    };
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const comment = document.getElementById("comment").value.trim();
-
-      if (name && comment) {
-        const saved = JSON.parse(localStorage.getItem("comments")) || [];
-        saved.push({ name, text: comment });
-        localStorage.setItem("comments", JSON.stringify(saved));
-        renderComment(name, comment, saved.length - 1);
-        form.reset();
-      }
-    });
-
-    function renderComment(name, text, index) {
-      const box = document.createElement("div");
-      box.className = "comment-box";
-
-      box.innerHTML = `
-        <strong>${name}</strong>
-        <p>${text}</p>
-        <button class="delete-btn">Delete</button>
-      `;
-
-      box.querySelector(".delete-btn").addEventListener("click", () => {
-        const saved = JSON.parse(localStorage.getItem("comments")) || [];
-        saved.splice(index, 1);
-        localStorage.setItem("comments", JSON.stringify(saved));
-        window.location.reload();
-      });
-
-      display.prepend(box);
-    }
-  </script>
 
 </body>
 </html>
