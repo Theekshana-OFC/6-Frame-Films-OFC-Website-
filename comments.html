@@ -5,235 +5,32 @@
   <title>Comment System</title>
   <style>
     body {
-      background: #0a0a0a;
-      color: white;
+      background-color: #000;
+      color: red;
       font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .box {
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px red;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      background: #111;
-      border: none;
-      border-bottom: 2px solid red;
-      color: white;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      box-sizing: border-box;
-      resize: none;
-      font-size: 16px;
-    }
-    button {
-      background: red;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-      position: relative;
-    }
-    button:hover {
-      transform: scale(1.05);
-    }
-    .comment {
-      background: #111;
-      border-left: 5px solid red;
-      padding: 10px;
-      margin: 10px auto;
-      max-width: 500px;
-      border-radius: 5px;
-      animation: slideRight 1s ease forwards;
-      cursor: pointer;
-    }
-    .reply-box {
-      margin-top: 10px;
-    }
-    .reply {
-      background: #222;
-      border-left: 5px solid #990000;
-      margin-top: 10px;
-      padding: 8px;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-    @keyframes slideRight {
-      0% { transform: translateX(-100%); opacity: 0; }
-      100% { transform: translateX(0); opacity: 1; }
-    }
-
-    .send-wrapper {
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 8px;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
     }
-    .knife {
-      width: 20px;
-      height: 20px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Font_Awesome_5_solid_utensil-knife.svg/512px-Font_Awesome_5_solid_utensil-knife.svg.png') no-repeat center;
-      background-size: contain;
-      cursor: pointer;
+    .error-box {
+      background-color: #111;
+      padding: 20px 25px;
+      border: 2px solid red;
+      border-radius: 8px;
+      box-shadow: 0 0 15px red;
     }
-
-    @media only screen and (max-width: 600px) {
-      .box, .comment {
-        max-width: 95% !important;
-        font-size: 16px;
-      }
-      input, textarea {
-        font-size: 16px;
-        padding: 12px;
-      }
-      .reply-box input, .reply-box textarea {
-        font-size: 16px;
-        padding: 10px;
-      }
-      .reply {
-        font-size: 15px;
-      }
-      button {
-        font-size: 16px;
-        padding: 10px 18px;
-      }
-      h2 {
-        font-size: 20px;
-      }
+    h1 {
+      margin: 0;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
-
-  <div class="box">
-    <h2>💬 Leave a Comment</h2>
-    <input type="text" id="name" placeholder="Your Name">
-    <textarea id="comment" rows="4" placeholder="Your Comment"></textarea>
-    <div class="send-wrapper">
-      <button onclick="postComment()">Send</button>
-      <div class="knife" onclick="closeReplyBoxes()" title="Close all replies"></div>
-    </div>
+  <div class="error-box">
+    <h1>Comment System Not Working</h1>
   </div>
-
-  <div id="comments"></div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyB9L3XQKBsJqY8cOzVdNumbVa4Vq8QaOhE",
-      authDomain: "comments-system-e1416.firebaseapp.com",
-      databaseURL: "https://comments-system-e1416-default-rtdb.firebaseio.com",
-      projectId: "comments-system-e1416",
-      storageBucket: "comments-system-e1416.appspot.com",
-      messagingSenderId: "437571712889",
-      appId: "1:437571712889:web:ed7e85b17d59404b55e1a8"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function postComment() {
-      const name = document.getElementById('name').value.trim();
-      const comment = document.getElementById('comment').value.trim();
-      if (!name || !comment) return alert("Fill in both fields!");
-
-      const commentData = {
-        name: name,
-        comment: comment,
-        timestamp: Date.now()
-      };
-
-      db.ref('comments').push(commentData);
-      document.getElementById('name').value = '';
-      document.getElementById('comment').value = '';
-    }
-
-    const commentsDiv = document.getElementById('comments');
-
-    function renderComments() {
-      db.ref('comments').on('value', snapshot => {
-        commentsDiv.innerHTML = '';
-        const data = snapshot.val();
-        if (!data) return;
-        const entries = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
-
-        entries.forEach(([id, comment]) => {
-          const div = document.createElement('div');
-          div.className = 'comment';
-          div.innerHTML = <strong>${comment.name}</strong><br>${comment.comment};
-
-          // Replies
-          const replies = comment.replies || {};
-          Object.values(replies).forEach(reply => {
-            const replyDiv = document.createElement('div');
-            replyDiv.className = 'reply';
-            replyDiv.innerHTML = <strong>${reply.name}</strong>: ${reply.text};
-            div.appendChild(replyDiv);
-          });
-
-          div.addEventListener('click', (e) => {
-            if (!div.querySelector('.reply-box')) showReplyBox(id, div);
-            e.stopPropagation();
-          });
-
-          commentsDiv.appendChild(div);
-        });
-      });
-    }
-
-    function showReplyBox(commentId, commentElement) {
-      const box = document.createElement('div');
-      box.className = 'reply-box';
-
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.placeholder = 'Your Name';
-
-      const textarea = document.createElement('textarea');
-      textarea.rows = 2;
-      textarea.placeholder = 'Reply...';
-
-      const sendWrapper = document.createElement('div');
-      sendWrapper.className = 'send-wrapper';
-
-      const button = document.createElement('button');
-      button.textContent = 'Send';
-      button.onclick = () => {
-        const name = input.value.trim();
-        const text = textarea.value.trim();
-        if (!name || !text) return alert('Fill all fields!');
-        const reply = { name, text, timestamp: Date.now() };
-        db.ref(comments/${commentId}/replies).push(reply);
-        box.remove();
-      };
-
-      const knife = document.createElement('div');
-      knife.className = 'knife';
-      knife.onclick = () => box.remove();
-      knife.title = "Close reply";
-
-      sendWrapper.appendChild(button);
-      sendWrapper.appendChild(knife);
-
-      box.appendChild(input);
-      box.appendChild(textarea);
-      box.appendChild(sendWrapper);
-      commentElement.appendChild(box);
-    }
-
-    function closeReplyBoxes() {
-      document.querySelectorAll('.reply-box').forEach(box => box.remove());
-    }
-
-    renderComments();
-  </script>
 </body>
 </html>
