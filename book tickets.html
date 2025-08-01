@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Ticket Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
@@ -11,25 +12,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* 🔴 Center vertically */
-      min-height: 100vh;       /* 🔴 Full screen height */
+      justify-content: center;
+      min-height: 100vh;
       padding: 20px;
     }
 
     .form-box {
       background-color: #1c0000;
-      padding: 20px;
+      padding: 25px;
       border-radius: 20px;
-      width: 90%;
-      max-width: 350px;
-      box-shadow: 0 0 20px red;
+      width: 95%;
+      max-width: 400px; /* ✅ Box now larger */
+      box-shadow: 0 0 25px red;
       border: 2px solid red;
     }
 
     .form-box h2 {
       text-align: center;
       color: red;
-      font-size: 24px;
+      font-size: 26px;
       margin-bottom: 20px;
     }
 
@@ -38,17 +39,18 @@
       margin-top: 15px;
       margin-bottom: 5px;
       font-weight: bold;
+      font-size: 15px;
     }
 
     input[type="text"],
     select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: 10px;
       background-color: #111;
       color: white;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .gender-group {
@@ -65,12 +67,12 @@
       background-color: red;
       color: black;
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border: none;
       border-radius: 30px;
       margin-top: 20px;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 17px;
       cursor: pointer;
       transition: 0.3s ease;
     }
@@ -84,6 +86,7 @@
       text-align: center;
       margin-top: 15px;
       color: lime;
+      font-size: 14px;
     }
   </style>
 </head>
