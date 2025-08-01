@@ -11,39 +11,75 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center; /* 🔴 Center vertically */
+      min-height: 100vh;       /* 🔴 Full screen height */
       padding: 20px;
     }
 
     .form-box {
-      background-color: #1c1c1c;
+      background-color: #1c0000;
       padding: 20px;
-      border-radius: 10px;
-      width: 300px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-      border-left: 4px solid red;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 0 20px red;
+      border: 2px solid red;
     }
+
     .form-box h2 {
       text-align: center;
       color: red;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
-    input, select {
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    select {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      background-color: #111;
+      color: white;
+      font-size: 14px;
     }
+
+    .gender-group {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .gender-group label {
+      font-weight: normal;
+    }
+
     .submit-btn {
       background-color: red;
-      color: white;
-      margin-top: 15px;
+      color: black;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: 0.3s ease;
     }
+
     .submit-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px red;
+      background-color: #ff1a1a;
+      transform: scale(1.02);
     }
+
     .message {
       text-align: center;
       margin-top: 15px;
@@ -54,19 +90,29 @@
 <body>
 
   <div class="form-box">
-    <h2>Book Ticket</h2>
-    <input type="text" id="name" placeholder="Your Name" required>
-    <input type="text" id="whatsapp" placeholder="WhatsApp Number" required>
-    <select id="gender">
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select>
+    <h2>Ticket Booking</h2>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="" required>
+
+    <label for="whatsapp">WhatsApp Number</label>
+    <input type="text" id="whatsapp" placeholder="+94xxxxxxxxxx" required>
+
+    <label for="price">Select Ticket Price</label>
     <select id="price">
+      <option value="">-- Choose Ticket --</option>
       <option value="500">Rs. 500</option>
       <option value="1000">Rs. 1000</option>
       <option value="2000">Rs. 2000</option>
     </select>
-    <button class="submit-btn" onclick="submitForm()">Submit</button>
+
+    <label>Gender</label>
+    <div class="gender-group">
+      <label><input type="radio" name="gender" value="Male" checked> Male</label>
+      <label><input type="radio" name="gender" value="Female"> Female</label>
+    </div>
+
+    <button class="submit-btn" onclick="submitForm()">Book Now</button>
     <div class="message" id="message"></div>
   </div>
 
@@ -75,7 +121,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBKahEg0xykXxmi7Xeu7wdW1QTy70qOwFA",
       authDomain: "databass-20cde.firebaseapp.com",
@@ -93,10 +138,10 @@
     function submitForm() {
       const name = document.getElementById("name").value.trim();
       const whatsapp = document.getElementById("whatsapp").value.trim();
-      const gender = document.getElementById("gender").value;
+      const gender = document.querySelector('input[name="gender"]:checked').value;
       const price = document.getElementById("price").value;
 
-      if (name === "" || whatsapp === "") {
+      if (name === "" || whatsapp === "" || price === "") {
         document.getElementById("message").innerText = "Please fill all fields.";
         return;
       }
@@ -110,15 +155,12 @@
         ticketNumber
       };
 
-      // Save to Firebase
       database.ref("bookings").push(booking);
 
-      // Success message
       document.getElementById("message").innerText = "Data saved successfully!";
-
-      // Clear form
       document.getElementById("name").value = "";
       document.getElementById("whatsapp").value = "";
+      document.getElementById("price").value = "";
     }
   </script>
 </body>
