@@ -10,107 +10,76 @@
       color: white;
       font-family: Arial, sans-serif;
       padding: 20px;
-      background-image: 
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
-      animation: moveGrid 12s linear infinite;
     }
-
-    @keyframes moveGrid {
-      from { background-position: 0 0; }
-      to { background-position: 200px 200px; }
-    }
-
     .container {
       max-width: 400px;
-      margin: 60px auto;
+      margin: 50px auto;
       padding: 25px;
       border: 2px solid red;
       border-radius: 15px;
-      background: linear-gradient(to bottom right, #220000, #400000);
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+      background-color: #1a1a1a;
+      box-shadow: 0 0 15px red;
     }
-
     h2 {
       text-align: center;
       color: red;
-      margin-bottom: 25px;
-      text-shadow: 0 0 10px red;
     }
-
     label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #fff;
+      margin-top: 15px;
     }
-
-    input[type="text"],
-    input[type="tel"],
-    select {
+    input, select {
       width: 100%;
       padding: 10px;
-      border: 1px solid red;
-      border-radius: 8px;
-      background-color: #111;
+      margin-top: 5px;
+      background: #111;
       color: white;
-      margin-bottom: 20px;
+      border: 1px solid red;
+      border-radius: 6px;
     }
-
-    .gender-options {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
+    .gender {
+      margin-top: 10px;
     }
-
-    input[type="radio"] {
-      margin-right: 5px;
+    .gender label {
+      margin-right: 15px;
     }
-
     button {
+      margin-top: 20px;
       width: 100%;
       padding: 12px;
       background-color: red;
-      color: black;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    button:hover {
-      background-color: darkred;
       color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <h2>Ticket Booking</h2>
     <form id="bookingForm">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" required>
+      <label for="name">Name</label>
+      <input type="text" id="name" required />
 
       <label for="whatsapp">WhatsApp Number</label>
-      <input type="tel" id="whatsapp" placeholder="+94xxxxxxxxx" required>
+      <input type="tel" id="whatsapp" required />
 
-      <label for="ticket">Select Ticket Price</label>
-      <select id="ticket" required>
-        <option value="">-- Choose Ticket --</option>
-        <option value="500">Rs. 500</option>
-        <option value="1000">Rs. 1000</option>
-        <option value="2000">Rs. 2000</option>
+      <label for="price">Select Ticket Price</label>
+      <select id="price" required>
+        <option value="">--Select--</option>
+        <option value="Rs. 500">Rs. 500</option>
+        <option value="Rs. 1000">Rs. 1000</option>
+        <option value="Rs. 2000">Rs. 2000</option>
       </select>
 
-      <label>Gender</label>
-      <div class="gender-options">
-        <label><input type="radio" name="gender" value="male" required> Male</label>
-        <label><input type="radio" name="gender" value="female"> Female</label>
+      <div class="gender">
+        <label><input type="radio" name="gender" value="Male" required /> Male</label>
+        <label><input type="radio" name="gender" value="Female" /> Female</label>
       </div>
 
-      <button type="submit">Book Now</button>
+      <button type="submit">Submit</button>
     </form>
   </div>
 
@@ -118,22 +87,18 @@
     document.getElementById("bookingForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("whatsapp").value.trim();
+      const name = document.getElementById("name").value;
+      const whatsapp = document.getElementById("whatsapp").value;
+      const price = document.getElementById("price").value;
       const gender = document.querySelector('input[name="gender"]:checked').value;
-      const price = document.getElementById("ticket").value;
 
-      const newBooking = { name, phone, gender, price };
-
+      const booking = { name, whatsapp, price, gender };
       const existing = JSON.parse(localStorage.getItem("bookings") || "[]");
-      existing.push(newBooking);
+      existing.push(booking);
       localStorage.setItem("bookings", JSON.stringify(existing));
 
-      // Mark as submitted
-      localStorage.setItem("hasSubmitted", "true");
-
-      // Go to display page
-      window.location.href = "databass.html";
+      alert("Data Saved!");
+      this.reset();
     });
   </script>
 </body>
