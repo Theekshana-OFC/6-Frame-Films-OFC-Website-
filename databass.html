@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>All Booked Tickets</title>
+  <meta charset="UTF-8">
+  <title>Booked Tickets</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
     body {
       background-color: #000;
       color: white;
       font-family: Arial, sans-serif;
       padding: 30px;
+    }
+    h2 {
+      text-align: center;
+      color: red;
+      margin-bottom: 30px;
     }
     .ticket-box {
       background-color: #1c1c1c;
@@ -17,40 +25,48 @@
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
     }
-    h2 {
-      color: red;
-      text-align: center;
-      margin-bottom: 30px;
-    }
   </style>
 </head>
 <body>
-  <h2>Booked Tickets</h2>
+  <h2>All Booked Tickets</h2>
   <div id="tickets"></div>
 
   <script>
-    const shouldShow = localStorage.getItem("showTickets") === "true";
-    const tickets = JSON.parse(localStorage.getItem("bookings")) || [];
-    const container = document.getElementById("tickets");
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKahEg0xykXxmi7Xeu7wdW1QTy70qOwFA",
+      authDomain: "databass-20cde.firebaseapp.com",
+      databaseURL: "https://databass-20cde-default-rtdb.firebaseio.com",
+      projectId: "databass-20cde",
+      storageBucket: "databass-20cde.appspot.com",
+      messagingSenderId: "396898869714",
+      appId: "1:396898869714:web:4108cbb2fe556fc79ae80b",
+      measurementId: "G-G2LQFJ45E1"
+    };
 
-    if (!shouldShow || tickets.length === 0) {
-      container.innerHTML = "<p>No bookings found.</p>";
-    } else {
-      tickets.forEach(ticket => {
-        const div = document.createElement("div");
-        div.className = "ticket-box";
-        div.innerHTML = `
-          <p><strong>Name:</strong> ${ticket.name}</p>
-          <p><strong>Phone:</strong> ${ticket.whatsapp}</p>
-          <p><strong>Gender:</strong> ${ticket.gender}</p>
-          <p><strong>Price:</strong> ${ticket.price}</p>
-        `;
-        container.appendChild(div);
-      });
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-      // Optional: remove flag after showing once
-      localStorage.removeItem("showTickets");
-    }
+    const ticketsContainer = document.getElementById("tickets");
+
+    db.ref("bookings").on("value", snapshot => {
+      ticketsContainer.innerHTML = ""; // clear
+      if (snapshot.exists()) {
+        snapshot.forEach(child => {
+          const data = child.val();
+          const div = document.createElement("div");
+          div.className = "ticket-box";
+          div.innerHTML = `
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Phone:</strong> ${data.whatsapp}</p>
+            <p><strong>Gender:</strong> ${data.gender}</p>
+            <p><strong>Price:</strong> ${data.ticket}</p>
+          `;
+          ticketsContainer.appendChild(div);
+        });
+      } else {
+        ticketsContainer.innerHTML = "<p>No bookings found.</p>";
+      }
+    });
   </script>
 </body>
 </html>
