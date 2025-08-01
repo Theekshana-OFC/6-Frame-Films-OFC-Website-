@@ -14,49 +14,49 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 20px;
+      padding: 15px;
     }
 
     .form-box {
       background-color: #1c0000;
-      padding: 25px;
-      border-radius: 20px;
+      padding: 20px;
+      border-radius: 15px;
       width: 95%;
-      max-width: 400px; /* ✅ Box now larger */
-      box-shadow: 0 0 25px red;
-      border: 2px solid red;
+      max-width: 320px; /* ✅ Smaller box */
+      box-shadow: 0 0 20px red;
+      border: 1.5px solid red;
     }
 
     .form-box h2 {
       text-align: center;
       color: red;
-      font-size: 26px;
-      margin-bottom: 20px;
+      font-size: 22px;
+      margin-bottom: 15px;
     }
 
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 12px;
       margin-bottom: 5px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     input[type="text"],
     select {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       background-color: #111;
       color: white;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     .gender-group {
       display: flex;
       justify-content: space-around;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .gender-group label {
@@ -67,12 +67,12 @@
       background-color: red;
       color: black;
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       border: none;
-      border-radius: 30px;
-      margin-top: 20px;
+      border-radius: 25px;
+      margin-top: 18px;
       font-weight: bold;
-      font-size: 17px;
+      font-size: 16px;
       cursor: pointer;
       transition: 0.3s ease;
     }
@@ -84,9 +84,9 @@
 
     .message {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 12px;
       color: lime;
-      font-size: 14px;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -129,10 +129,9 @@
       authDomain: "databass-20cde.firebaseapp.com",
       databaseURL: "https://databass-20cde-default-rtdb.firebaseio.com",
       projectId: "databass-20cde",
-      storageBucket: "databass-20cde.firebasestorage.app",
+      storageBucket: "databass-20cde.appspot.com",
       messagingSenderId: "396898869714",
-      appId: "1:396898869714:web:4108cbb2fe556fc79ae80b",
-      measurementId: "G-G2LQFJ45E1"
+      appId: "1:396898869714:web:4108cbb2fe556fc79ae80b"
     };
 
     firebase.initializeApp(firebaseConfig);
