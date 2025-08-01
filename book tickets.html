@@ -1,147 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
   <title>Ticket Booking</title>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
     body {
+      margin: 0;
       background-color: #000;
       color: white;
       font-family: Arial, sans-serif;
-      padding: 30px;
-    }
-    .container {
-      max-width: 400px;
-      margin: 50px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
-      background: #1a1a1a;
-      border-radius: 10px;
-      border: 1px solid red;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
     }
-    h2 {
+    .menu-icon {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: red;
+    }
+    .form-box {
+      background-color: #1c1c1c;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+      border-left: 4px solid red;
+    }
+    .form-box h2 {
       text-align: center;
       color: red;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
     }
     input, select {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
-      background: #000;
-      border: 1px solid red;
-      color: white;
+      margin-top: 10px;
+      border: none;
       border-radius: 5px;
     }
-    .gender {
-      display: flex;
-      gap: 15px;
-      margin-top: 10px;
-    }
-    .gender label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
+    .submit-btn {
       background-color: red;
-      color: black;
-      font-weight: bold;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background-color: darkred;
       color: white;
-    }
-    .menu-icon {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      font-size: 18px;
+      margin-top: 15px;
       cursor: pointer;
-      color: white;
-      background: rgba(255, 0, 0, 0.2);
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid red;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .submit-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px red;
+    }
+    .message {
+      text-align: center;
+      margin-top: 15px;
+      color: lime;
     }
   </style>
 </head>
 <body>
 
-<div class="menu-icon" onclick="window.location.href='database.html'">☰</div>
+  <div class="menu-icon" onclick="window.location.href='database.html'">☰</div>
 
-<div class="container">
-  <h2>Ticket Booking</h2>
-  <form id="bookingForm">
-    <label>Full Name</label>
-    <input type="text" id="name" required>
-
-    <label>WhatsApp Number</label>
-    <input type="text" id="whatsapp" required>
-
-    <label>Ticket Price</label>
-    <select id="ticket" required>
-      <option value="">-- Select --</option>
-      <option value="Rs. 500">Rs. 500</option>
-      <option value="Rs. 1000">Rs. 1000</option>
-      <option value="Rs. 2000">Rs. 2000</option>
+  <div class="form-box">
+    <h2>Book Ticket</h2>
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="text" id="whatsapp" placeholder="WhatsApp Number" required>
+    <select id="gender">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
     </select>
+    <select id="price">
+      <option value="500">Rs. 500</option>
+      <option value="1000">Rs. 1000</option>
+      <option value="2000">Rs. 2000</option>
+    </select>
+    <button class="submit-btn" onclick="submitForm()">Submit</button>
+    <div class="message" id="message"></div>
+  </div>
 
-    <label>Gender</label>
-    <div class="gender">
-      <label><input type="radio" name="gender" value="Male" required> Male</label>
-      <label><input type="radio" name="gender" value="Female"> Female</label>
-    </div>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <button type="submit">Book Now</button>
-  </form>
-</div>
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKahEg0xykXxmi7Xeu7wdW1QTy70qOwFA",
+      authDomain: "databass-20cde.firebaseapp.com",
+      databaseURL: "https://databass-20cde-default-rtdb.firebaseio.com",
+      projectId: "databass-20cde",
+      storageBucket: "databass-20cde.firebasestorage.app",
+      messagingSenderId: "396898869714",
+      appId: "1:396898869714:web:4108cbb2fe556fc79ae80b",
+      measurementId: "G-G2LQFJ45E1"
+    };
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBKahEg0xykXxmi7Xeu7wdW1QTy70qOwFA",
-    authDomain: "databass-20cde.firebaseapp.com",
-    databaseURL: "https://databass-20cde-default-rtdb.firebaseio.com",
-    projectId: "databass-20cde",
-    storageBucket: "databass-20cde.appspot.com",
-    messagingSenderId: "396898869714",
-    appId: "1:396898869714:web:4108cbb2fe556fc79ae80b",
-    measurementId: "G-G2LQFJ45E1"
-  };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    function submitForm() {
+      const name = document.getElementById("name").value.trim();
+      const whatsapp = document.getElementById("whatsapp").value.trim();
+      const gender = document.getElementById("gender").value;
+      const price = document.getElementById("price").value;
 
-  document.getElementById("bookingForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const name = document.getElementById("name").value.trim();
-    const whatsapp = document.getElementById("whatsapp").value.trim();
-    const ticket = document.getElementById("ticket").value;
-    const gender = document.querySelector('input[name="gender"]:checked').value;
+      if (name === "" || whatsapp === "") {
+        document.getElementById("message").innerText = "Please fill all fields.";
+        return;
+      }
 
-    const newBooking = { name, whatsapp, ticket, gender };
+      const ticketNumber = Math.floor(100000 + Math.random() * 900000);
+      const booking = {
+        name,
+        whatsapp,
+        gender,
+        price,
+        ticketNumber
+      };
 
-    db.ref("bookings").push(newBooking).then(() => {
-      alert("Data Saved!");
-      document.getElementById("bookingForm").reset();
-    }).catch((error) => {
-      alert("Error saving data: " + error.message);
-    });
-  });
-</script>
+      // Save to Firebase
+      database.ref("bookings").push(booking);
 
+      // Success message
+      document.getElementById("message").innerText = "Data saved successfully!";
+
+      // Clear form
+      document.getElementById("name").value = "";
+      document.getElementById("whatsapp").value = "";
+    }
+  </script>
 </body>
 </html>
