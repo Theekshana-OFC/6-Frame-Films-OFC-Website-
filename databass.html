@@ -1,74 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Booked Ticket Info</title>
+  <title>All Booked Tickets</title>
   <style>
     body {
       background-color: #000;
       color: white;
       font-family: Arial, sans-serif;
-      padding: 20px;
-      background-image: 
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.1) 40px);
-      animation: moveGrid 12s linear infinite;
+      padding: 30px;
     }
-
-    @keyframes moveGrid {
-      from { background-position: 0 0; }
-      to { background-position: 200px 200px; }
-    }
-
-    .booking-box {
+    .ticket-box {
       background-color: #1c1c1c;
-      border-left: 5px solid red;
+      border-left: 4px solid red;
       padding: 15px;
       margin-bottom: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
     }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
     h2 {
       color: red;
-      text-shadow: 0 0 10px red;
+      text-align: center;
       margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Booked Tickets</h2>
-    <div id="bookingsContainer"></div>
-  </div>
+  <h2>Booked Tickets</h2>
+  <div id="tickets"></div>
 
   <script>
-    const submitted = localStorage.getItem("hasSubmitted");
-    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+    const shouldShow = localStorage.getItem("showTickets") === "true";
+    const tickets = JSON.parse(localStorage.getItem("bookings")) || [];
+    const container = document.getElementById("tickets");
 
-    const container = document.getElementById("bookingsContainer");
-
-    if (submitted !== "true" || bookings.length === 0) {
-      container.innerHTML = "<p style='color:red;'>No bookings found.</p>";
+    if (!shouldShow || tickets.length === 0) {
+      container.innerHTML = "<p>No bookings found.</p>";
     } else {
-      bookings.forEach((b, index) => {
-        const box = document.createElement("div");
-        box.className = "booking-box";
-        box.innerHTML = `
-          <p><strong>Name:</strong> ${b.name}</p>
-          <p><strong>Phone:</strong> ${b.phone}</p>
-          <p><strong>Gender:</strong> ${b.gender}</p>
-          <p><strong>Price:</strong> Rs. ${b.price}</p>
+      tickets.forEach(ticket => {
+        const div = document.createElement("div");
+        div.className = "ticket-box";
+        div.innerHTML = `
+          <p><strong>Name:</strong> ${ticket.name}</p>
+          <p><strong>Phone:</strong> ${ticket.whatsapp}</p>
+          <p><strong>Gender:</strong> ${ticket.gender}</p>
+          <p><strong>Price:</strong> ${ticket.price}</p>
         `;
-        container.appendChild(box);
+        container.appendChild(div);
       });
+
+      // Optional: remove flag after showing once
+      localStorage.removeItem("showTickets");
     }
   </script>
 </body>
