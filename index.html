@@ -1,162 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>6 Frame Films OFC</title>
+  <title>Ticket Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 0, 0, 0.15) 40px);
-      background-size: 40px 40px;
-      animation: moveGrid 10s linear infinite;
-      color: #fff;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    @keyframes moveGrid {
-      from { background-position: 0 0; }
-      to { background-position: 200px 0; }
-    }
-
-    .logo {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      border: 3px solid red;
-      object-fit: cover;
-      box-shadow: 0 0 25px red;
-      margin: 20px auto;
-      display: block;
-    }
-
-    h1 {
-      font-size: 2em;
-      margin: 20px 0 10px;
-      text-align: center;
-    }
-
-    h1 span { color: red; }
-
-    .buttons {
-      margin-top: 25px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .buttons a {
-      padding: 12px 25px;
-      border-radius: 30px;
-      border: 2px solid red;
-      background: linear-gradient(to right, #ff0000, #800000);
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000000;
       color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .buttons a:hover {
-      background: #ff3333;
-    }
-
-    .support-cards {
-      margin-top: 40px;
+      font-family: Arial, sans-serif;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
-      gap: 25px;
+      justify-content: center;
       align-items: center;
     }
 
-    .card {
-      background: linear-gradient(to bottom right, #220000, #400000);
+    .form-box {
+      background-color: #0a0a0a;
+      padding: 15px;
+      border-radius: 15px;
+      width: 85%;
+      max-width: 280px;
+      box-shadow: 0 0 20px red;
       border: 2px solid red;
-      border-radius: 25px;
-      padding: 25px;
-      width: 95%;
-      max-width: 260px;
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 0 35px rgba(255, 0, 0, 0.6);
-    }
-
-    .card-img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 3px solid red;
+    .form-box h2 {
+      color: red;
+      font-size: 20px;
       margin-bottom: 15px;
     }
 
-    .card h3 { color: white; font-size: 1.5rem; margin-bottom: 5px; }
-    .card .role { color: #ccc; font-size: 1.1rem; margin-bottom: 15px; }
-
-    .contact-btn {
-      padding: 10px 20px;
-      font-size: 1rem;
-      color: red;
-      border: none;
-      border-radius: 25px;
-      text-decoration: none;
-      transition: 0.3s;
+    .disabled-message {
+      font-size: 16px;
+      color: #ccc;
+      margin-top: 5px;
+      font-weight: bold;
     }
 
-    .contact-btn:hover {
-      background: red;
-      color: black;
-    }
-
-    .rights {
-      margin-top: 20px;
-      color: red;
-      font-size: 0.9rem;
-      text-align: center;
+    .time-display {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #ff4444;
     }
   </style>
 </head>
 <body>
-
-  <div id="main-content">
-    <img src="https://github.com/Theekshana-OFC/6-Frame-Films-OFC-Website-/blob/main/photos/logo.jpg?raw=true" alt="Logo" class="logo" />
-    <h1>WELCOME TO <span>6 FRAME FILMS OFC</span></h1>
-
-    <div class="buttons">
-      <a href="team.html">Team</a>
-      <a href="project.html">News</a>
-      <a href="book tickets.html">Book Ticket</a>
-    </div>
-
-    <div class="support-cards">
-      <div class="card">
-        <img src="https://github.com/Theekshana-OFC/6-Frame-Films-OFC-Website-/blob/main/photos/theekshana%20.jpg?raw=true" alt="" class="card-img">
-        <h3>Theekshana</h3>
-        <p class="role">ꜱɪᴛᴇ ᴏᴡɴᴇʀ</p>
-        <a href="https://wa.me/+94778080044" class="contact-btn">𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗨𝘀</a>
-      </div>
-
-      <div class="card">
-        <img src="https://github.com/NOVA-MD-OFC/NOVA-MD-Help/blob/main/WhatsApp%20Image%202025-07-29%20at%2019.51.52_7ef00c30.jpg?raw=true" alt="" class="card-img">
-        <h3>Malshani</h3>
-        <p class="role">ꜱɪᴛᴇ ᴀᴅᴍɪɴ</p>
-        <a href="https://wa.me/+94761288912" class="contact-btn">𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗨𝘀</a>
-      </div>
-    </div>
-
-    <p class="rights">© 6 ꜰʀᴀᴍᴇ ꜰɪʟᴍꜱ ᴀʟʟ ʀɪɢʜᴛꜱ ʀᴇꜱᴇʀᴠᴇᴅ</p>
+  <div class="form-box">
+    <h2>Ticket Booking</h2>
+    <div class="disabled-message">This Is Not Working Right Now\n\nThis Only Works If You Make a Payment.</div>
+    <div class="time-display" id="timeDisplay"></div>
   </div>
 
+  <script>
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      document.getElementById("timeDisplay").textContent = "" + timeString;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+  </script>
 </body>
 </html>
