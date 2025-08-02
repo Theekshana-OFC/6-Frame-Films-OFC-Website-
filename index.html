@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>6 Frame Films OFC</title>
   <style>
+    /* -- EXISTING STYLES (unchanged) -- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: Arial, sans-serif;
       background-color: #000;
@@ -134,9 +134,26 @@
       font-size: 0.9rem;
       text-align: center;
     }
+
+    /* ✅ Views counter box for owner only */
+    #viewsBox {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #200000;
+      border: 2px solid red;
+      padding: 10px 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px red;
+      font-weight: bold;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
+
+  <div id="viewsBox">Views: <span id="viewCount">0</span></div>
 
   <div id="main-content">
     <img src="https://github.com/Theekshana-OFC/6-Frame-Films-OFC-Website-/blob/main/photos/logo.jpg?raw=true" alt="Logo" class="logo" />
@@ -162,5 +179,45 @@
     <p class="rights">© 6 ꜰʀᴀᴍᴇ ꜰɪʟᴍꜱ ᴀʟʟ ʀɪɢʜᴛꜱ ʀᴇꜱᴇʀᴠᴇᴅ</p>
   </div>
 
+  <!-- ✅ Firebase + Views Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB9L3XQKBsJqY8cOzVdNumbVa4Vq8QaOhE",
+      authDomain: "comments-system-e1416.firebaseapp.com",
+      databaseURL: "https://comments-system-e1416-default-rtdb.firebaseio.com",
+      projectId: "comments-system-e1416",
+      storageBucket: "comments-system-e1416.appspot.com",
+      messagingSenderId: "437571712889",
+      appId: "1:437571712889:web:ed7e85b17d59404b55e1a8",
+      measurementId: "G-045QNTPL8M"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const viewsRef = ref(db, "views");
+
+    // ✅ Increment view count
+    get(viewsRef).then(snapshot => {
+      let count = snapshot.exists() ? snapshot.val() : 0;
+      set(viewsRef, count + 1);
+    });
+
+    // ✅ Show view count only if user is owner
+    const ownerIPs = ["175.157.46.212"]; // <-- 🔁 Add your IP address here
+
+    fetch("https://api.ipify.org?format=json")
+      .then(res => res.json())
+      .then(data => {
+        if (ownerIPs.includes(data.ip)) {
+          document.getElementById("viewsBox").style.display = "block";
+          onValue(viewsRef, (snapshot) => {
+            document.getElementById("viewCount").innerText = snapshot.val();
+          });
+        }
+      });
+  </script>
 </body>
 </html>
