@@ -180,44 +180,48 @@
   </div>
 
   <!-- ✅ Firebase + Views Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  <!-- ✅ වෙනස: set() දැමීම owner check එකට පිටතට ගෙනයනවා -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyB9L3XQKBsJqY8cOzVdNumbVa4Vq8QaOhE",
-      authDomain: "comments-system-e1416.firebaseapp.com",
-      databaseURL: "https://comments-system-e1416-default-rtdb.firebaseio.com",
-      projectId: "comments-system-e1416",
-      storageBucket: "comments-system-e1416.appspot.com",
-      messagingSenderId: "437571712889",
-      appId: "1:437571712889:web:ed7e85b17d59404b55e1a8",
-      measurementId: "G-045QNTPL8M"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyB9L3XQKBsJqY8cOzVdNumbVa4Vq8QaOhE",
+    authDomain: "comments-system-e1416.firebaseapp.com",
+    databaseURL: "https://comments-system-e1416-default-rtdb.firebaseio.com",
+    projectId: "comments-system-e1416",
+    storageBucket: "comments-system-e1416.appspot.com",
+    messagingSenderId: "437571712889",
+    appId: "1:437571712889:web:ed7e85b17d59404b55e1a8",
+    measurementId: "G-045QNTPL8M"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const viewsRef = ref(db, "views");
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const viewsRef = ref(db, "views");
 
-    // ✅ Increment view count
+  // ✅ Count එක localStorage වලින් check කරලා, duplicate වීම වළක්වන්න
+  if (!localStorage.getItem("viewed")) {
     get(viewsRef).then(snapshot => {
       let count = snapshot.exists() ? snapshot.val() : 0;
       set(viewsRef, count + 1);
     });
+    localStorage.setItem("viewed", "true");
+  }
 
-    // ✅ Show view count only if user is owner
-    const ownerIPs = ["175.157.46.212"]; // <-- 🔁 Add your IP address here
+  // ✅ Show views box only if IP is owner
+  const ownerIPs = ["175.157.46.212"];
 
-    fetch("https://api.ipify.org?format=json")
-      .then(res => res.json())
-      .then(data => {
-        if (ownerIPs.includes(data.ip)) {
-          document.getElementById("viewsBox").style.display = "block";
-          onValue(viewsRef, (snapshot) => {
-            document.getElementById("viewCount").innerText = snapshot.val();
-          });
-        }
-      });
-  </script>
+  fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      if (ownerIPs.includes(data.ip)) {
+        document.getElementById("viewsBox").style.display = "block";
+        onValue(viewsRef, (snapshot) => {
+          document.getElementById("viewCount").innerText = snapshot.val();
+        });
+      }
+    });
+</script>
 </body>
 </html>
